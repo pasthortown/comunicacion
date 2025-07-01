@@ -1,0 +1,16 @@
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\netcore.exe
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\netcore.deps.json
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\netcore.runtimeconfig.json
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\netcore.dll
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\netcore.pdb
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.GeneratedMSBuildEditorConfig.editorconfig
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.AssemblyInfoInputs.cache
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.AssemblyInfo.cs
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.csproj.CoreCompileInputs.cache
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.dll
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\refint\netcore.dll
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.pdb
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.genruntimeconfig.cache
+D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\ref\netcore.dll
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\Resources\tshirt.png
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\Resources\main.ico
