@@ -1,18 +1,21 @@
-# Imagen base de Python
+# Imagen base
 FROM python:3.11-slim
 
-# Establecer directorio de trabajo
+# Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar archivos al contenedor
-COPY requirements.txt requirements.txt
-COPY ws.py ws.py
+# Copiar solo archivos necesarios
+COPY main.py .
+COPY base.py .
+COPY helpers.py .
+COPY requirements.txt .
+COPY handlers/ ./handlers/
 
 # Instalar dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Puerto de escucha
+# Exponer el puerto del servicio
 EXPOSE 5050
 
-# Ejecutar el servicio
-CMD ["python", "ws.py"]
+# Comando de ejecución
+CMD ["python", "main.py"]

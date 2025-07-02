@@ -3,12 +3,19 @@ using ImageActivityMonitor.Infrastructure;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Security.Principal;
+using Newtonsoft.Json;
+using System;
 
 namespace ImageActivityMonitor.UI
 {
     public partial class MainForm : Form
     {
         private NotifyIcon notifyIcon;
+        private static bool yaInicializado = false;
 
         public MainForm()
         {
@@ -46,6 +53,56 @@ namespace ImageActivityMonitor.UI
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
+            if (yaInicializado)
+                return;
+            yaInicializado = true;
+
+            string userEmail = WindowsIdentity.GetCurrent().Name;
+            if (userEmail.Contains("\\")) userEmail = userEmail.Split('\\')[1];
+
+            string jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4ifQ.j7h-lJGsQ7X5u3H2Uj92BoWVfpYdS2DQvse7Z_DTPDI";
+            string urlBase = "http://localhost:5050";
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync($"{urlBase}/search/users/{userEmail}");
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        var nuevoUsuario = new
+                        {
+                            email = userEmail
+                        };
+
+                        var json = JsonConvert.SerializeObject(nuevoUsuario);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        var postResponse = await client.PostAsync($"{urlBase}/users", content);
+
+                        if (postResponse.IsSuccessStatusCode)
+                        {
+                            Console.WriteLine("✅ Usuario registrado correctamente");
+                        }
+                        else
+                        {
+                            Console.WriteLine("⚠️ Error al registrar usuario");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("✅ Usuario ya existe");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("❌ Error al conectar al WebService: " + ex.Message);
+                }
+            }
+
             var guiWrapper = new GuiWrapper();
             var imageLoader = new ImageLoader();
             var monitorService = new UserMonitorService(guiWrapper);

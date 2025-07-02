@@ -1,0 +1,30 @@
+Monitor:
+   Subir a rabbitmq los mensajes que se deben mostrar en los próximos 10 minutos con marca de tiempo actual 
+   Borrar aquellos mensajes que tienen tiempo de presentación menor a la hora actual.
+
+NetCore:
+   Descargar los mensajes que no he sincronizado
+
+Backoffice 
+     Autenticación
+     Gestión de administradores del sistema
+     Gestión de usuarios receptores de mensajes
+     Mostrar usuarios registrados que no tienen grupos
+     Crear nuevo mensaje
+          Escoger tipo (por defecto Imagen)
+          Colocar imagen
+          Escoger fecha y hora de presentación 
+          Escoger zona de la pantalla donde se presenta
+          Escoger grupos a los que va dirigido
+     Agenda de mensajes programados 
+     Edición de mensaje
+     Eliminación de mensaje
+
+No sé puede eliminar un mensaje que se mostrara en 10 minutos o menos
+
+Agregar un endpoint en el ws
+   En NetCore reportar un activo al mensaje visto
+
+Tipos de mensajes futuros 
+     Video
+     Texto
