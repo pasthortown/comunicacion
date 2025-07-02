@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:8.0.11
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
+    env_file:
+      - variables.env
+    networks:
+      Comuncation_NET:
+        ipv4_address: 192.168.97.10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+    env_file:
+      - variables.env
+    networks:
+      Comuncation_NET:
+        ipv4_address: 192.168.97.11
+
+  ws:
+    build:
+      context: ./ws
+      dockerfile: ws.dockerfile
+    container_name: ws
+    restart: always
+    env_file:
+      - variables.env
+    ports:
+      - "5050:5050"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    networks:
+      Comuncation_NET:
+        ipv4_address: 192.168.97.12
+
+networks:
+  Comuncation_NET:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.97.0/24
+          gateway: 192.168.97.1

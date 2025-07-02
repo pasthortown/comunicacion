@@ -1,0 +1,132 @@
+{
+  "info": {
+    "_postman_id": "7a2cf6ab-3b4e-4cc6-84b1-7e6f44a4d123",
+    "name": "WS Catalogos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "jwt_token",
+      "value": "clavesupersegura"
+    },
+    {
+      "key": "url_webservice",
+      "value": "http://localhost:5050"
+    }
+  ],
+  "item": [
+    {
+      "name": "GET all items",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{url_webservice}}/mi_catalogo",
+          "host": ["{{url_webservice}}"],
+          "path": ["mi_catalogo"]
+        }
+      }
+    },
+    {
+      "name": "GET item by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{url_webservice}}/mi_catalogo?id=1",
+          "host": ["{{url_webservice}}"],
+          "path": ["mi_catalogo"],
+          "query": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST create item",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Ejemplo\",\n  \"descripcion\": \"Item de prueba\"\n}"
+        },
+        "url": {
+          "raw": "{{url_webservice}}/mi_catalogo",
+          "host": ["{{url_webservice}}"],
+          "path": ["mi_catalogo"]
+        }
+      }
+    },
+    {
+      "name": "PATCH update item",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"item_id\": 1,\n  \"nombre\": \"Actualizado\",\n  \"descripcion\": \"Texto actualizado\"\n}"
+        },
+        "url": {
+          "raw": "{{url_webservice}}/mi_catalogo",
+          "host": ["{{url_webservice}}"],
+          "path": ["mi_catalogo"]
+        }
+      }
+    },
+    {
+      "name": "DELETE item",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{url_webservice}}/mi_catalogo?id=1",
+          "host": ["{{url_webservice}}"],
+          "path": ["mi_catalogo"],
+          "query": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
