@@ -18,3 +18,5 @@ D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.sourcelink.js
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
 D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.csproj.AssemblyReference.cache
 D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.csproj.Up2Date
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\.env
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\RabbitMQ.Client.dll

@@ -28,7 +28,6 @@ namespace ImageActivityMonitor.UI
             this.Opacity = 0;
 
             this.Load += MainForm_Load;
-
             InicializarNotifyIcon();
         }
 
@@ -39,7 +38,6 @@ namespace ImageActivityMonitor.UI
             notifyIcon.Visible = true;
             notifyIcon.Text = "Herramienta de Comunicación";
 
-            // Crear menú contextual
             ContextMenuStrip contextMenu = new ContextMenuStrip();
             ToolStripMenuItem salirMenuItem = new ToolStripMenuItem("Salir");
             salirMenuItem.Click += (s, e) =>
@@ -53,15 +51,14 @@ namespace ImageActivityMonitor.UI
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
-            if (yaInicializado)
-                return;
+            if (yaInicializado) return;
             yaInicializado = true;
 
             string userEmail = WindowsIdentity.GetCurrent().Name;
             if (userEmail.Contains("\\")) userEmail = userEmail.Split('\\')[1];
 
-            string jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4ifQ.j7h-lJGsQ7X5u3H2Uj92BoWVfpYdS2DQvse7Z_DTPDI";
-            string urlBase = "http://localhost:5050";
+            string jwtToken = EnvReader.Get("JWT_TOKEN");
+            string urlBase = EnvReader.Get("WEB_SERVICE_URL");
 
             using (HttpClient client = new HttpClient())
             {
@@ -89,24 +86,24 @@ namespace ImageActivityMonitor.UI
                         }
                         else
                         {
-                            Console.WriteLine("⚠️ Error al registrar usuario");
+                            Console.WriteLine("Error al registrar usuario");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("✅ Usuario ya existe");
+                        Console.WriteLine("Usuario ya existe");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("❌ Error al conectar al WebService: " + ex.Message);
+                    Console.WriteLine("Error al conectar al WebService: " + ex.Message);
                 }
             }
 
             var guiWrapper = new GuiWrapper();
             var imageLoader = new ImageLoader();
             var monitorService = new UserMonitorService(guiWrapper);
-            var logger = new ActivityLogger("activity.log");
+            var logger = new ActivityLogger();
             var displayService = new ImageDisplayService(imageLoader, guiWrapper, monitorService, logger);
 
             string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "tshirt.png");

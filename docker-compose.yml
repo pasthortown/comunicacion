@@ -48,6 +48,24 @@ services:
       Comuncation_NET:
         ipv4_address: 192.168.97.12
 
+monitor:
+    build:
+      context: ./monitor
+      dockerfile: monitor.dockerfile
+    container_name: monitor
+    restart: always
+    env_file:
+      - variables.env
+    depends_on:
+      - mongodb
+      - rabbitmq
+    links:
+      - mongodb
+      - rabbitmq
+    networks:
+      Comuncation_NET:
+        ipv4_address: 192.168.97.13
+        
 networks:
   Comuncation_NET:
     driver: bridge

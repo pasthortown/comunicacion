@@ -5,7 +5,7 @@ from base import db, BaseHandler
 class MessageHandler(BaseHandler):
     def get(self, message_id):
         collection = db["messagereport"]
-        result = list(collection.find({"message_id": message_id}))
+        result = list(collection.find({"message_id": int(message_id)}))
         if result:
             self.write({'response': json.loads(json_util.dumps(result)), 'status': 200})
         else:
