@@ -48,7 +48,7 @@ services:
       Comuncation_NET:
         ipv4_address: 192.168.97.12
 
-monitor:
+  monitor:
     build:
       context: ./monitor
       dockerfile: monitor.dockerfile

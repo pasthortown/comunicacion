@@ -1,13 +1,12 @@
 Monitor:
    Subir a rabbitmq los mensajes que se deben mostrar en los próximos 10 minutos con marca de tiempo actual 
    Borrar aquellos mensajes que tienen tiempo de presentación menor a la hora actual.
-   Llevar la activity_queue a los logs en mongo para graficar estadisticas en messagereport
-
+   
 NetCore:
-   Descargar los mensajes que no he sincronizado
-
+   Descargar desde rabbitmq los mensajes que no he sincronizado
 
 No sé puede eliminar un mensaje que se mostrara en 10 minutos o menos
+Se pueden programar mensajes al menos a mostrarse en 10 minutos
 
 Tipos de mensajes futuros 
      Video

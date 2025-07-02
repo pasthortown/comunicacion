@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import pika
 from pymongo import MongoClient, ReturnDocument
 
@@ -22,53 +23,89 @@ mongo_db = mongo_client[mongo_bdd]
 collection = mongo_db["messagereport"]
 counters = mongo_db["_counters"]
 
-# Conexión a RabbitMQ
+# Preparar conexión a RabbitMQ
 credentials = pika.PlainCredentials(rabbitmq_user, rabbitmq_pass)
 parameters = pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port, credentials=credentials)
-connection = pika.BlockingConnection(parameters)
-channel = connection.channel()
-channel.queue_declare(queue=rabbitmq_queue, durable=True)
 
-print("Esperando mensajes de RabbitMQ...")
+print("🔄 Iniciando monitor...")
 
-def get_next_sequence(name):
+def esperar_rabbitmq():
+    intentos = 0
+    while True:
+        try:
+            connection = pika.BlockingConnection(parameters)
+            connection.close()
+            print("RabbitMQ está disponible.")
+            return
+        except pika.exceptions.AMQPConnectionError:
+            intentos += 1
+            print(f"RabbitMQ no disponible. Reintentando en 5 segundos... (intento {intentos})")
+            time.sleep(5)
+
+def get_next_sequence(name, cantidad):
     result = counters.find_one_and_update(
         {"_id": name},
-        {"$inc": {"seq": 1}},
+        {"$inc": {"seq": cantidad}},
         return_document=ReturnDocument.AFTER,
         upsert=True
     )
     return result["seq"]
 
-def callback(ch, method, properties, body):
-    try:
-        mensaje = json.loads(body.decode("utf-8"))
+def procesar_mensajes():
+    connection = pika.BlockingConnection(parameters)
+    channel = connection.channel()
+    channel.queue_declare(queue=rabbitmq_queue, durable=True)
 
-        nuevo_documento = {
-            "message_id": mensaje.get("message_id"),
-            "email": mensaje.get("email"),
-            "zona": mensaje.get("zona"),
-            "estado": mensaje.get("estado"),
-            "timestamp": mensaje.get("timestamp"),
-            "item_id": get_next_sequence("messagereport")
-        }
+    mensajes = []
+    ack_tags = []
 
-        collection.insert_one(nuevo_documento)
-        print(f"Insertado en MongoDB: {nuevo_documento}")
+    def recolector(ch, method, properties, body):
+        try:
+            mensaje = json.loads(body.decode("utf-8"))
+            mensajes.append(mensaje)
+            ack_tags.append(method.delivery_tag)
+        except Exception as e:
+            print(f"Error procesando mensaje: {e}")
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
 
-        ch.basic_ack(delivery_tag=method.delivery_tag)
+    channel.basic_qos(prefetch_count=1000)
+    for _ in range(10000):
+        method_frame, header_frame, body = channel.basic_get(rabbitmq_queue)
+        if method_frame:
+            recolector(channel, method_frame, header_frame, body)
+        else:
+            break
 
-    except Exception as e:
-        print(f"Error procesando mensaje: {e}")
-        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+    if mensajes:
+        print(f"Procesando {len(mensajes)} mensajes desde RabbitMQ...")
+        secuencia_final = get_next_sequence("messagereport", len(mensajes))
+        secuencia_inicio = secuencia_final - len(mensajes) + 1
 
-channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue=rabbitmq_queue, on_message_callback=callback)
+        documentos = []
+        for i, mensaje in enumerate(mensajes):
+            documentos.append({
+                "message_id": mensaje.get("message_id"),
+                "email": mensaje.get("email"),
+                "zona": mensaje.get("zona"),
+                "estado": mensaje.get("estado"),
+                "timestamp": mensaje.get("timestamp"),
+                "item_id": secuencia_inicio + i
+            })
 
-try:
-    channel.start_consuming()
-except KeyboardInterrupt:
-    print("Monitor detenido.")
-    channel.stop_consuming()
+        try:
+            collection.insert_many(documentos)
+            print(f"Insertados {len(documentos)} registros en MongoDB")
+            for tag in ack_tags:
+                channel.basic_ack(delivery_tag=tag)
+        except Exception as e:
+            print(f"Error al insertar en MongoDB: {e}")
+            for tag in ack_tags:
+                channel.basic_nack(delivery_tag=tag, requeue=True)
 
-connection.close()
+    connection.close()
+
+if __name__ == "__main__":
+    esperar_rabbitmq()
+    while True:
+        procesar_mensajes()
+        time.sleep(600)  # 10 minutos
