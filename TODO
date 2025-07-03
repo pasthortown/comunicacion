@@ -4,11 +4,11 @@ NetCore:
       tipo
       zona
       duración
-      escala
-      accion
-      agenda
+      link
       contenido
-      mostrado: Llevar control de cual mensaje se ha mostrado para que si la hora actual es mayor a la del mensaje y aun no se ha mostrado entonces mostrarlo en orden hasta igualar las tareas
+      
+   Llevar el control de mensaje mostrado: Llevar control de cual mensaje se ha mostrado para que si la hora actual es mayor a la del mensaje y aun no se ha mostrado entonces mostrarlo en orden hasta igualar las tareas
+   Cada messagegroup lleva el schedule
 
 Tipos de mensajes futuros 
      Video

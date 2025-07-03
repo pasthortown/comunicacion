@@ -2,36 +2,39 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ImageActivityMonitor.Models;
 using ImageActivityMonitor.Infrastructure;
 
 namespace ImageActivityMonitor.App
 {
-    public class ImageDisplayService
+    public class ImageMessageDisplayService
     {
         private readonly ImageLoader _imageLoader;
         private readonly GuiWrapper _guiWrapper;
         private readonly UserMonitorService _monitorService;
         private readonly ActivityLogger _logger;
 
-        public ImageDisplayService(
+        public ImageMessageDisplayService(
             ImageLoader imageLoader,
             GuiWrapper guiWrapper,
             UserMonitorService monitorService,
             ActivityLogger logger)
         {
-            _imageLoader = imageLoader ?? throw new ArgumentNullException(nameof(imageLoader));
-            _guiWrapper = guiWrapper ?? throw new ArgumentNullException(nameof(guiWrapper));
-            _monitorService = monitorService ?? throw new ArgumentNullException(nameof(monitorService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _imageLoader = imageLoader;
+            _guiWrapper = guiWrapper;
+            _monitorService = monitorService;
+            _logger = logger;
         }
 
-        public async Task<string> MostrarImagenEnZonaAsync(string imagePath, int zona)
+        public async Task<string> MostrarMensajeAsync(ImageMessage mensaje)
         {
-            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
-            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            if (string.IsNullOrWhiteSpace(mensaje.Content))
+                return "Contenido de imagen no válido";
 
-            var image = _imageLoader.LoadImage(imagePath, 300, out int imgWidth, out int imgHeight);
-            var pos = _guiWrapper.CalcularPosicionPorZona(zona, screenWidth, screenHeight, imgWidth, imgHeight);
+            var image = _imageLoader.LoadImageFromBase64(mensaje.Content, 300, out int imgWidth, out int imgHeight);
+            var screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            var screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            var pos = _guiWrapper.CalcularPosicionPorZona(mensaje.Zone, screenWidth, screenHeight, imgWidth, imgHeight);
 
             var form = new Form
             {
@@ -53,12 +56,10 @@ namespace ImageActivityMonitor.App
                 BackColor = Color.White
             };
 
-            string estado = "Inactivo"; // Valor por defecto
-            bool mouseMovido = false;
+            string estado = "Inactivo";
             bool leido = false;
             bool accedido = false;
 
-            // Evento clic en la imagen
             pictureBox.Click += (s, e) =>
             {
                 accedido = true;
@@ -66,7 +67,7 @@ namespace ImageActivityMonitor.App
                 {
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
-                        FileName = "https://www.google.com",
+                        FileName = mensaje.Link,
                         UseShellExecute = true
                     });
                 }
@@ -76,14 +77,12 @@ namespace ImageActivityMonitor.App
                 }
             };
 
-            // Mouse Enter: subir a 100%
             pictureBox.MouseEnter += (s, e) =>
             {
                 leido = true;
                 form.Opacity = 1.0;
             };
 
-            // Mouse Leave: volver a 70%
             pictureBox.MouseLeave += (s, e) =>
             {
                 form.Opacity = 0.7;
@@ -92,7 +91,7 @@ namespace ImageActivityMonitor.App
             form.Controls.Add(pictureBox);
             form.Show();
 
-            int fadein = 1000, visible = 5000, fadeout = 1000;
+            int fadein = 1000, fadeout = 1000;
             int pasos = 30;
             double maxOpacity = 0.7;
 
@@ -102,9 +101,8 @@ namespace ImageActivityMonitor.App
                 await Task.Delay(fadein / pasos);
             }
 
-            var monitoreo = _monitorService.MonitorearActividadAsync((fadein + visible + fadeout) / 1000);
-
-            await Task.Delay(visible);
+            var monitoreo = _monitorService.MonitorearActividadAsync(mensaje.Duration);
+            await Task.Delay(mensaje.Duration * 1000);
 
             for (int i = pasos; i >= 0; i--)
             {
@@ -116,7 +114,6 @@ namespace ImageActivityMonitor.App
 
             bool fueActivo = await monitoreo;
 
-            // Prioridad de estado: Accedido > Leído > Activo > Inactivo
             if (accedido)
                 estado = "Accedido";
             else if (leido)
@@ -124,7 +121,7 @@ namespace ImageActivityMonitor.App
             else if (fueActivo)
                 estado = "Activo";
 
-            _logger.Log(zona, estado);
+            _logger.Log(mensaje.Zone, estado);
 
             return estado;
         }

@@ -12,7 +12,6 @@ D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\refint\netcore.dll
 D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.pdb
 D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.genruntimeconfig.cache
 D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\ref\netcore.dll
-D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\Resources\tshirt.png
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\Resources\main.ico
 D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.sourcelink.json
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
@@ -20,3 +19,4 @@ D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.csproj.Assemb
 D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.csproj.Up2Date
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\.env
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\RabbitMQ.Client.dll
+D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\Resources\tshirt_base64.txt

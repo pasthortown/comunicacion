@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from base import db, BaseHandler
 
 class MessagesGroupHandler(BaseHandler):
-    def get(self):
+    def get(self, group_name):
         collection = db["messagesgroup"]
 
         # Calcular rango de fechas del día UTC actual
@@ -12,8 +12,9 @@ class MessagesGroupHandler(BaseHandler):
         start_of_day = datetime.combine(today, datetime.min.time())
         end_of_day = datetime.combine(today, datetime.max.time())
 
-        # Buscar todos los documentos donde schedule esté en el día actual
+        # Construir query con filtro por grupo y fecha
         query = {
+            "group": group_name,
             "schedule": {
                 "$gte": start_of_day,
                 "$lte": end_of_day
@@ -21,6 +22,7 @@ class MessagesGroupHandler(BaseHandler):
         }
 
         result = list(collection.find(query))
+
         if result:
             self.write({
                 'response': json.loads(json_util.dumps(result)),
@@ -29,6 +31,6 @@ class MessagesGroupHandler(BaseHandler):
         else:
             self.set_status(404)
             self.write({
-                'response': 'No se encontraron registros para hoy',
+                'response': f"No se encontraron mensajes para el grupo '{group_name}' hoy",
                 'status': 404
             })

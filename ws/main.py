@@ -15,7 +15,7 @@ def make_app():
         (r"/search/usersgroup/([^/]+)", UserGroupHandler),
         (r"/search/users/([^/]+)", UserHandler),
         (r"/search/messagereport/([^/]+)", MessageHandler),
-        (r"/search/messagesgroup", MessagesGroupHandler) 
+        (r"/search/messagesgroup/([^/]+)", MessagesGroupHandler)
     ], debug=True)
 
 if __name__ == "__main__":
