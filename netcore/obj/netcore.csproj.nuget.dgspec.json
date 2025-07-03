@@ -50,6 +50,10 @@
             "RabbitMQ.Client": {
               "target": "Package",
               "version": "[6.6.0, )"
+            },
+            "System.Data.SQLite": {
+              "target": "Package",
+              "version": "[1.0.119, )"
             }
           },
           "imports": [

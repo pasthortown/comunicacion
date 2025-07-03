@@ -19,8 +19,7 @@ namespace ImageActivityMonitor.UI
     {
         private NotifyIcon notifyIcon;
         private static bool yaInicializado = false;
-
-        private List<(int messageId, DateTime schedule)> agenda = new();
+        private List<(int messageId, DateTime schedule, bool showed)> agenda = new();
         private Dictionary<int, dynamic> mensajes = new();
 
         public MainForm()
@@ -62,24 +61,57 @@ namespace ImageActivityMonitor.UI
             string jwtToken = EnvReader.Get("JWT_TOKEN");
             string urlBase = EnvReader.Get("WEB_SERVICE_URL");
 
+            List<string> userGroups = new();
+
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
                 var userData = new UserDataGetter(client, urlBase);
                 string userEmail = userData.GetWindowsUsername();
+                Console.WriteLine($"[Usuario]: {userEmail}");
 
-                await userData.RegisterUserIfNotExists(userEmail);
-                List<string> userGroups = await userData.GetUserGroups(userEmail);
+                try
+                {
+                    await userData.RegisterUserIfNotExists(userEmail);
+                    userGroups = await userData.GetUserGroups(userEmail);
+                    Console.WriteLine($"[Grupos]: {string.Join(", ", userGroups)}");
+
+                    // Guardar grupos en SQLite
+                    Database.TruncateGroups();
+                    foreach (var group in userGroups)
+                        Database.InsertGroup(group);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Error conexión WS - usando SQLite]: {ex.Message}");
+                    userGroups = Database.GetGroups();
+                    Console.WriteLine($"[Grupos desde SQLite]: {string.Join(", ", userGroups)}");
+                }
 
                 var messageGetter = new MessageGetter(client, urlBase);
+
+                Console.WriteLine("[Limpieza SQLite]");
+                messageGetter.LimpiarAgendasNoHoy();
+
+                try
+                {
+                    Console.WriteLine("[Sincronización con Web Service]");
+                    await messageGetter.SincronizarConWebService(userGroups);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Sincronización fallida]: {ex.Message}");
+                }
+
+                Console.WriteLine("[Cargando datos desde SQLite]");
                 agenda = await messageGetter.BuildAgenda(userGroups);
                 mensajes = await messageGetter.FetchMessages(agenda);
 
                 Console.WriteLine("Agenda final:");
                 foreach (var item in agenda)
                 {
-                    Console.WriteLine($"message_id: {item.messageId}, schedule: {item.schedule:g}");
+                    Console.WriteLine($"message_id: {item.messageId}, schedule: {item.schedule:g}, showed: {item.showed}");
                 }
             }
 
@@ -98,32 +130,45 @@ namespace ImageActivityMonitor.UI
         {
             try
             {
-                string base64Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "tshirt_base64.txt");
-
-                if (!File.Exists(base64Path))
+                if (agenda.Count == 0)
                 {
-                    MessageBox.Show("No se encontró el archivo base64 para la imagen de prueba.");
+                    Console.WriteLine("[Sin mensajes en agenda]");
                     return;
                 }
 
-                string base64 = File.ReadAllText(base64Path);
-
-                var mensaje = new ImageMessage
+                var primerItem = agenda.FirstOrDefault();
+                if (!mensajes.ContainsKey(primerItem.messageId))
                 {
-                    Type = "image",
-                    Link = "https://www.youtube.com",
-                    Duration = 10,
-                    Zone = 1,
-                    Content = base64,
-                    Width = 100
-                };
+                    Console.WriteLine($"[Falta mensaje en SQLite] ID: {primerItem.messageId}");
+                    return;
+                }
 
-                string estado = await service.MostrarMensajeAsync(mensaje);
-                Console.WriteLine($"Estado del mensaje en zona {mensaje.Zone}: {estado}");
+                dynamic rawMessage = mensajes[primerItem.messageId];
+                string type = rawMessage.type;
+
+                if (type == "image")
+                {
+                    var mensaje = new ImageMessage
+                    {
+                        Type = rawMessage.type,
+                        Link = rawMessage.link,
+                        Duration = (int)rawMessage.duration,
+                        Zone = (int)rawMessage.zone,
+                        Content = (string)rawMessage.content.image,
+                        Width = rawMessage.width != null ? (int)rawMessage.width : 400
+                    };
+
+                    string estado = await service.MostrarMensajeAsync(mensaje);
+                    Console.WriteLine($"[Mostrado] Zona {mensaje.Zone}, Estado: {estado}");
+                }
+                else
+                {
+                    Console.WriteLine($"[Tipo no soportado]: {type}");
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al mostrar mensaje: " + ex.Message);
+                Console.WriteLine("Error al mostrar mensaje: " + ex.Message);
             }
         }
     }

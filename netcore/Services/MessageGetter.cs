@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ImageActivityMonitor.Infrastructure;
 
 namespace ImageActivityMonitor.Services
 {
@@ -18,8 +19,23 @@ namespace ImageActivityMonitor.Services
             this.urlBase = urlBase;
         }
 
-        public async Task<List<(int messageId, DateTime schedule)>> BuildAgenda(List<string> grupos)
+        public async Task<List<(int messageId, DateTime schedule, bool showed)>> BuildAgenda(List<string> grupos)
         {
+            Console.WriteLine("[BuildAgenda desde SQLite]");
+            return Database.GetAgenda();
+        }
+
+        public async Task<Dictionary<int, dynamic>> FetchMessages(List<(int messageId, DateTime schedule, bool showed)> agenda)
+        {
+            Console.WriteLine("[FetchMessages desde SQLite]");
+            var ids = agenda.Select(a => a.messageId).Distinct();
+            return Database.GetMessages(ids);
+        }
+
+        public async Task SincronizarConWebService(List<string> grupos)
+        {
+            Console.WriteLine("[SincronizarConWebService]");
+
             var agendaTemp = new List<(int messageId, DateTime schedule)>();
 
             foreach (var grupo in grupos)
@@ -31,6 +47,7 @@ namespace ImageActivityMonitor.Services
 
                     string content = await response.Content.ReadAsStringAsync();
                     dynamic result = JsonConvert.DeserializeObject<dynamic>(content);
+
                     foreach (var item in result.response)
                     {
                         int messageId = item.message_id;
@@ -40,11 +57,11 @@ namespace ImageActivityMonitor.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error al obtener mensajes de {grupo}: {ex.Message}");
+                    Console.WriteLine($"Error al obtener mensajes del grupo {grupo}: {ex.Message}");
                 }
             }
 
-            var agenda = agendaTemp
+            var agendaFiltrada = agendaTemp
                 .OrderBy(x => x.messageId)
                 .ThenBy(x => x.schedule)
                 .GroupBy(x => x.messageId)
@@ -54,39 +71,49 @@ namespace ImageActivityMonitor.Services
                     foreach (var item in g)
                     {
                         if (list.Count == 0 || (item.schedule - list.Last().schedule).TotalMinutes >= 30)
-                        {
                             list.Add(item);
-                        }
                     }
                     return list;
                 }).ToList();
 
-            return agenda;
-        }
-
-        public async Task<Dictionary<int, dynamic>> FetchMessages(List<(int messageId, DateTime schedule)> agenda)
-        {
-            var mensajes = new Dictionary<int, dynamic>();
-            var ids = agenda.Select(a => a.messageId).Distinct();
-
-            foreach (var id in ids)
+            foreach (var (messageId, schedule) in agendaFiltrada)
             {
-                try
+                if (!Database.AgendaExists(messageId, schedule))
                 {
-                    var response = await client.GetAsync($"{urlBase}/messages?id={id}");
-                    if (!response.IsSuccessStatusCode) continue;
-
-                    string content = await response.Content.ReadAsStringAsync();
-                    dynamic result = JsonConvert.DeserializeObject<dynamic>(content);
-                    mensajes[id] = result.response;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error al obtener el mensaje {id}: {ex.Message}");
+                    Database.InsertAgenda(messageId, schedule, false);
+                    Console.WriteLine($"[Nueva Agenda] message_id: {messageId} - schedule: {schedule:g}");
                 }
             }
 
-            return mensajes;
+            var idsUnicos = agendaFiltrada.Select(x => x.messageId).Distinct();
+            foreach (var id in idsUnicos)
+            {
+                if (!Database.MessageExists(id))
+                {
+                    try
+                    {
+                        var response = await client.GetAsync($"{urlBase}/messages?id={id}");
+                        if (!response.IsSuccessStatusCode) continue;
+
+                        string content = await response.Content.ReadAsStringAsync();
+                        dynamic result = JsonConvert.DeserializeObject<dynamic>(content);
+                        string json = JsonConvert.SerializeObject(result.response);
+
+                        Database.InsertMessage(id, json);
+                        Console.WriteLine($"[Nuevo Mensaje] id: {id}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error al obtener el mensaje {id}: {ex.Message}");
+                    }
+                }
+            }
+        }
+
+        public void LimpiarAgendasNoHoy()
+        {
+            Console.WriteLine("[LimpiarAgendasNoHoy]");
+            Database.DeleteOldAgendas();
         }
     }
 }
