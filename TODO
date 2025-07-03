@@ -1,12 +1,14 @@
-Monitor:
-   Subir a rabbitmq los mensajes que se deben mostrar en los próximos 10 minutos con marca de tiempo actual 
-   Borrar aquellos mensajes que tienen tiempo de presentación menor a la hora actual.
-   
 NetCore:
-   Descargar desde rabbitmq los mensajes que no he sincronizado
-
-No sé puede eliminar un mensaje que se mostrara en 10 minutos o menos
-Se pueden programar mensajes al menos a mostrarse en 10 minutos
+   Obtener la lista de los mensajes del dia de hoy, y descargar uno por uno iniciando por el más próximo y almacenarlos en un archivod e memoria para mostrarlos en el momento adecuado.
+   De cada mensaje obtener los parametros y almacenar en un archivo local de acceso:
+      tipo
+      zona
+      duración
+      escala
+      accion
+      agenda
+      contenido
+      mostrado: Llevar control de cual mensaje se ha mostrado para que si la hora actual es mayor a la del mensaje y aun no se ha mostrado entonces mostrarlo en orden hasta igualar las tareas
 
 Tipos de mensajes futuros 
      Video

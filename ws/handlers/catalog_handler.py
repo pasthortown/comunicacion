@@ -11,7 +11,7 @@ class CatalogHandler(BaseHandler):
         collection = db[catalog]
         item_id = get_next_id(catalog)
         data['item_id'] = item_id
-        data['timestamp'] = datetime.datetime.utcnow().isoformat()
+        data['timestamp'] = datetime.datetime.utcnow()
         result = collection.insert_one(data)
         data['_id'] = result.inserted_id
         self.write({'response': json.loads(json_util.dumps(data)), 'status': 200})
@@ -46,7 +46,7 @@ class CatalogHandler(BaseHandler):
             self.set_status(400)
             return self.write({'error': 'item_id es obligatorio'})
         collection = db[catalog]
-        data['timestamp'] = datetime.datetime.utcnow().isoformat()
+        data['timestamp'] = datetime.datetime.utcnow()
         result = collection.update_one({"item_id": int(item_id)}, {"$set": data})
         if result.matched_count == 0:
             self.set_status(404)

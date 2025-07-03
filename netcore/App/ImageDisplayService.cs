@@ -53,9 +53,15 @@ namespace ImageActivityMonitor.App
                 BackColor = Color.White
             };
 
+            string estado = "Inactivo"; // Valor por defecto
+            bool mouseMovido = false;
+            bool leido = false;
+            bool accedido = false;
+
             // Evento clic en la imagen
             pictureBox.Click += (s, e) =>
             {
+                accedido = true;
                 try
                 {
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
@@ -73,6 +79,7 @@ namespace ImageActivityMonitor.App
             // Mouse Enter: subir a 100%
             pictureBox.MouseEnter += (s, e) =>
             {
+                leido = true;
                 form.Opacity = 1.0;
             };
 
@@ -107,7 +114,16 @@ namespace ImageActivityMonitor.App
 
             form.Close();
 
-            string estado = await monitoreo ? "Activo" : "Inactivo";
+            bool fueActivo = await monitoreo;
+
+            // Prioridad de estado: Accedido > Leído > Activo > Inactivo
+            if (accedido)
+                estado = "Accedido";
+            else if (leido)
+                estado = "Leído";
+            else if (fueActivo)
+                estado = "Activo";
+
             _logger.Log(zona, estado);
 
             return estado;

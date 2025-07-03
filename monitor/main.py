@@ -3,6 +3,8 @@ import json
 import time
 import pika
 from pymongo import MongoClient, ReturnDocument
+from datetime import datetime
+from dateutil import parser
 
 # Leer variables de entorno
 mongo_bdd = os.getenv('mongo_bdd')
@@ -88,7 +90,8 @@ def procesar_mensajes():
                 "email": mensaje.get("email"),
                 "zona": mensaje.get("zona"),
                 "estado": mensaje.get("estado"),
-                "timestamp": mensaje.get("timestamp"),
+                "timestamp": datetime.utcnow(),
+                "timestate": parser.parse(mensaje.get("timestamp")),
                 "item_id": secuencia_inicio + i
             })
 

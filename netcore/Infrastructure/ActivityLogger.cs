@@ -29,8 +29,6 @@ namespace ImageActivityMonitor.Infrastructure
 
         public void Log(int zona, string estado)
         {
-            if (estado != "Activo") return;
-
             var factory = new ConnectionFactory()
             {
                 HostName = _host,
@@ -56,7 +54,7 @@ namespace ImageActivityMonitor.Infrastructure
                     email = _userEmail,
                     zona = zona,
                     estado = estado,
-                    timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
                 };
 
                 var json = JsonConvert.SerializeObject(payload);

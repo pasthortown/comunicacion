@@ -82,7 +82,7 @@ namespace ImageActivityMonitor.UI
 
                         if (postResponse.IsSuccessStatusCode)
                         {
-                            Console.WriteLine("✅ Usuario registrado correctamente");
+                            Console.WriteLine("Usuario registrado correctamente");
                         }
                         else
                         {

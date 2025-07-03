@@ -6,6 +6,7 @@ from handlers.catalog_handler import CatalogHandler
 from handlers.usergroup_handler import UserGroupHandler
 from handlers.user_handler import UserHandler
 from handlers.message_handler import MessageHandler
+from handlers.messagesgroup_handler import MessagesGroupHandler
 
 def make_app():
     return Application([
@@ -13,7 +14,8 @@ def make_app():
         (r"/([^/]+)", CatalogHandler),
         (r"/search/usersgroup/([^/]+)", UserGroupHandler),
         (r"/search/users/([^/]+)", UserHandler),
-        (r"/search/messagereport/([^/]+)", MessageHandler)
+        (r"/search/messagereport/([^/]+)", MessageHandler),
+        (r"/search/messagesgroup", MessagesGroupHandler) 
     ], debug=True)
 
 if __name__ == "__main__":

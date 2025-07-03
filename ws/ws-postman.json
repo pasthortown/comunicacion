@@ -138,6 +138,22 @@
           "path": ["search", "messagereport", "abc123"]
         }
       }
+    },
+    {
+      "name": "GET Message Groups Today",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization", "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{url_webservice}}/search/messagesgroup",
+          "host": ["{{url_webservice}}"],
+          "path": ["search", "messagesgroup"]
+        }
+      }
     }
   ]
 }
