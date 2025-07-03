@@ -111,7 +111,7 @@ namespace ImageActivityMonitor.UI
                 var mensaje = new ImageMessage
                 {
                     Type = "image",
-                    Link = "https://www.google.com",
+                    Link = "https://www.youtube.com",
                     Duration = 10,
                     Zone = 1,
                     Content = base64
