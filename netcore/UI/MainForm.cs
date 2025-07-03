@@ -114,7 +114,8 @@ namespace ImageActivityMonitor.UI
                     Link = "https://www.youtube.com",
                     Duration = 10,
                     Zone = 1,
-                    Content = base64
+                    Content = base64,
+                    Width = 100
                 };
 
                 string estado = await service.MostrarMensajeAsync(mensaje);

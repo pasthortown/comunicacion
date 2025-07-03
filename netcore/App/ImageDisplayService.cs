@@ -31,7 +31,7 @@ namespace ImageActivityMonitor.App
             if (string.IsNullOrWhiteSpace(mensaje.Content))
                 return "Contenido de imagen no válido";
 
-            var image = _imageLoader.LoadImageFromBase64(mensaje.Content, 300, out int imgWidth, out int imgHeight);
+            var image = _imageLoader.LoadImageFromBase64(mensaje.Content, mensaje.Width, out int imgWidth, out int imgHeight);
             var screenWidth = Screen.PrimaryScreen.Bounds.Width;
             var screenHeight = Screen.PrimaryScreen.Bounds.Height;
             var pos = _guiWrapper.CalcularPosicionPorZona(mensaje.Zone, screenWidth, screenHeight, imgWidth, imgHeight);

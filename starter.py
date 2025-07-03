@@ -24,33 +24,4 @@ def post_item(endpoint, data):
 
 # 1. Insertar en usersgroup
 post_item("usersgroup", {"group": "Tecnología", "email": "luis.salazar"})
-
-# 2. Insertar en users
-post_item("users", {"email": "luis.salazar"})
-
-# 3. Calcular schedule
-now = datetime.utcnow().replace(microsecond=0)
-schedule = (now + timedelta(hours=sumar_horas, minutes=sumar_minutos)).isoformat()
-
-# 4. Insertar en messagesgroup
-post_item("messagesgroup", {
-    "schedule": schedule,
-    "group": "Tecnología",
-    "message_id": 1
-})
-
-# 5. Codificar imagen en base64
-image_path = r"D:\Images\send.png"
-with open(image_path, "rb") as image_file:
-    encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-
-# 6. Insertar en messages
-post_item("messages", {
-    "type": "image",
-    "link": "https://youtube.com",
-    "duration": 10,
-    "zone": 2,
-    "content": {
-        "image": encoded_image
-    }
-})
+post_item("usersgroup", {"group": "Soporte", "email": "luis.salazar"})

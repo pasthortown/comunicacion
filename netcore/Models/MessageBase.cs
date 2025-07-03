@@ -6,5 +6,6 @@ namespace ImageActivityMonitor.Models
         public string Link { get; set; } = string.Empty;
         public int Duration { get; set; }
         public int Zone { get; set; }
+        public int Width { get; set; } = 400;
     }
 }
