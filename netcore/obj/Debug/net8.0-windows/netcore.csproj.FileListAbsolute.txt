@@ -19,7 +19,6 @@ D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.csproj.Assemb
 D:\Proyectos\Comunication\netcore\obj\Debug\net8.0-windows\netcore.csproj.Up2Date
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\.env
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\RabbitMQ.Client.dll
-D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\Resources\tshirt_base64.txt
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\EntityFramework.SqlServer.dll
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\EntityFramework.dll
 D:\Proyectos\Comunication\netcore\bin\Debug\net8.0-windows\System.Data.SQLite.dll

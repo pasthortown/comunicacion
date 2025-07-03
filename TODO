@@ -1,15 +1,5 @@
 NetCore:
-   Obtener la lista de los mensajes del dia de hoy, y descargar uno por uno iniciando por el más próximo y almacenarlos en un archivod e memoria para mostrarlos en el momento adecuado.
-   De cada mensaje obtener los parametros y almacenar en un archivo local de acceso:
-      tipo
-      zona
-      duración
-      link
-      contenido
-      
-   Llevar el control de mensaje mostrado: Llevar control de cual mensaje se ha mostrado para que si la hora actual es mayor a la del mensaje y aun no se ha mostrado entonces mostrarlo en orden hasta igualar las tareas
-   Cada messagegroup lleva el schedule
-
+   Mostrar los mensajes conforme la agenda.
 Tipos de mensajes futuros 
      Video
      Texto

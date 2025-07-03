@@ -10,9 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Resources\tshirt_base64.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Update="Resources\main.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
