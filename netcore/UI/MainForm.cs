@@ -1,16 +1,16 @@
 using ImageActivityMonitor.App;
 using ImageActivityMonitor.Infrastructure;
 using ImageActivityMonitor.Models;
+using ImageActivityMonitor.Services;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Security.Principal;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ImageActivityMonitor.UI
@@ -19,13 +19,14 @@ namespace ImageActivityMonitor.UI
     {
         private NotifyIcon notifyIcon;
         private static bool yaInicializado = false;
-        private List<string> userGroups = new();
+
+        private List<(int messageId, DateTime schedule)> agenda = new();
+        private Dictionary<int, dynamic> mensajes = new();
 
         public MainForm()
         {
             InitializeComponent();
 
-            // Ocultar el formulario completamente
             this.ShowInTaskbar = false;
             this.WindowState = FormWindowState.Minimized;
             this.Visible = false;
@@ -58,9 +59,6 @@ namespace ImageActivityMonitor.UI
             if (yaInicializado) return;
             yaInicializado = true;
 
-            string userEmail = WindowsIdentity.GetCurrent().Name;
-            if (userEmail.Contains("\\")) userEmail = userEmail.Split('\\')[1];
-
             string jwtToken = EnvReader.Get("JWT_TOKEN");
             string urlBase = EnvReader.Get("WEB_SERVICE_URL");
 
@@ -68,57 +66,23 @@ namespace ImageActivityMonitor.UI
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
-                try
+                var userData = new UserDataGetter(client, urlBase);
+                string userEmail = userData.GetWindowsUsername();
+
+                await userData.RegisterUserIfNotExists(userEmail);
+                List<string> userGroups = await userData.GetUserGroups(userEmail);
+
+                var messageGetter = new MessageGetter(client, urlBase);
+                agenda = await messageGetter.BuildAgenda(userGroups);
+                mensajes = await messageGetter.FetchMessages(agenda);
+
+                Console.WriteLine("Agenda final:");
+                foreach (var item in agenda)
                 {
-                    // Verificar existencia del usuario
-                    HttpResponseMessage response = await client.GetAsync($"{urlBase}/search/users/{userEmail}");
-
-                    if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                    {
-                        var nuevoUsuario = new { email = userEmail };
-                        var json = JsonConvert.SerializeObject(nuevoUsuario);
-                        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                        var postResponse = await client.PostAsync($"{urlBase}/users", content);
-
-                        if (postResponse.IsSuccessStatusCode)
-                            Console.WriteLine("Usuario registrado correctamente");
-                        else
-                            Console.WriteLine("Error al registrar usuario");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Usuario ya existe");
-
-                        // Obtener grupos del usuario
-                        HttpResponseMessage groupResponse = await client.GetAsync($"{urlBase}/search/usersgroup/{userEmail}");
-                        if (groupResponse.IsSuccessStatusCode)
-                        {
-                            string responseContent = await groupResponse.Content.ReadAsStringAsync();
-                            var parsed = JsonConvert.DeserializeObject<dynamic>(responseContent);
-                            var items = parsed.response;
-
-                            foreach (var item in items)
-                            {
-                                if (item.group != null)
-                                    userGroups.Add((string)item.group.ToString());
-                            }
-
-                            Console.WriteLine("Grupos del usuario: " + string.Join(", ", userGroups));
-                        }
-                        else
-                        {
-                            Console.WriteLine("No se pudieron obtener los grupos del usuario");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error al conectar al WebService: " + ex.Message);
+                    Console.WriteLine($"message_id: {item.messageId}, schedule: {item.schedule:g}");
                 }
             }
 
-            // Instanciar servicios
             var guiWrapper = new GuiWrapper();
             var imageLoader = new ImageLoader();
             var monitorService = new UserMonitorService(guiWrapper);
@@ -127,7 +91,6 @@ namespace ImageActivityMonitor.UI
             var imageMessageService = new ImageMessageDisplayService(imageLoader, guiWrapper, monitorService, logger);
             var messageDisplayService = new MessageDisplayService(imageMessageService);
 
-            // Por ahora seguimos con una prueba simple
             await MostrarMensajesDelDiaAsync(messageDisplayService);
         }
 

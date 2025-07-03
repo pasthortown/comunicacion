@@ -12,7 +12,7 @@ headers = {
 
 # Control de horario
 sumar_horas = 1
-sumar_minutos = 1
+sumar_minutos = 10
 
 # Utilidad para POST
 def post_item(endpoint, data):
@@ -22,12 +22,6 @@ def post_item(endpoint, data):
     else:
         print(f"❌ Error al insertar en {endpoint}: {response.status_code} - {response.text}")
 
-# 1. Insertar en usersgroup
-post_item("usersgroup", {"group": "Tecnología", "email": "luis.salazar"})
-
-# 2. Insertar en users
-post_item("users", {"email": "luis.salazar"})
-
 # 3. Calcular schedule
 now = datetime.utcnow().replace(microsecond=0)
 schedule = (now + timedelta(hours=sumar_horas, minutes=sumar_minutos)).isoformat()
@@ -35,22 +29,6 @@ schedule = (now + timedelta(hours=sumar_horas, minutes=sumar_minutos)).isoformat
 # 4. Insertar en messagesgroup
 post_item("messagesgroup", {
     "schedule": schedule,
-    "group": "Tecnología",
+    "group": "Soporte",
     "message_id": 1
-})
-
-# 5. Codificar imagen en base64
-image_path = r"D:\Images\send.png"
-with open(image_path, "rb") as image_file:
-    encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-
-# 6. Insertar en messages
-post_item("messages", {
-    "type": "image",
-    "link": "https://youtube.com",
-    "duration": 10,
-    "zone": 2,
-    "content": {
-        "image": encoded_image
-    }
 })
