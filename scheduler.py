@@ -11,8 +11,8 @@ headers = {
 }
 
 # Control de horario
-sumar_horas = 2
-sumar_minutos = 40
+sumar_horas = 0
+sumar_minutos = 1
 
 # Utilidad para POST
 def post_item(endpoint, data):

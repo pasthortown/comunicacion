@@ -174,5 +174,16 @@ namespace ImageActivityMonitor.Infrastructure
 
             return result;
         }
+
+        public static void MarkAgendaAsShowed(int messageId, DateTime schedule)
+        {
+            using var conn = GetConnection();
+            conn.Open();
+
+            using var cmd = new SQLiteCommand("UPDATE Agenda SET showed = 1 WHERE message_id = @id AND ABS(strftime('%s', schedule) - strftime('%s', @schedule)) < 60", conn);
+            cmd.Parameters.AddWithValue("@id", messageId);
+            cmd.Parameters.AddWithValue("@schedule", schedule.ToString("o"));
+            cmd.ExecuteNonQuery();
+        }
     }
 }
