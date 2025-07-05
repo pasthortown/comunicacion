@@ -173,9 +173,6 @@ namespace ImageActivityMonitor.UI
                             continue;
                         }
 
-                        Database.MarkAgendaAsShowed(item.messageId, item.schedule);
-                        agenda = Database.GetAgenda();
-
                         dynamic rawMessage = mensajes[item.messageId];
                         string type = rawMessage.type;
 
@@ -184,6 +181,7 @@ namespace ImageActivityMonitor.UI
                             MessageBase message = service.ParseMessage(type.ToLower(), rawMessage);
                             if (message != null)
                             {
+                                Database.MarkAgendaAsShowed(item.messageId, item.schedule);
                                 string estado = await service.MostrarMensajeAsync(message);
                                 Console.WriteLine($"[Mostrado {type}] Zona {message.Zone}, Estado: {estado}");
                             }
@@ -194,6 +192,9 @@ namespace ImageActivityMonitor.UI
                         });
                     }
                 }
+
+                // ✅ Agenda se actualiza al final del ciclo
+                agenda = Database.GetAgenda();
             }
             catch (Exception ex)
             {
