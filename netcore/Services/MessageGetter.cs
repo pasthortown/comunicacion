@@ -81,7 +81,7 @@ namespace ImageActivityMonitor.Services
                 if (!Database.AgendaExists(messageId, schedule))
                 {
                     Database.InsertAgenda(messageId, schedule, false);
-                    Console.WriteLine($"[Nueva Agenda] message_id: {messageId} - schedule: {schedule:g}");
+                    Console.WriteLine($"[Nueva Agenda] message_id: {messageId} - schedule: {schedule.ToLocalTime():g}");
                 }
             }
 

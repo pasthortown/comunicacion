@@ -83,8 +83,13 @@ namespace ImageActivityMonitor.UI
             var monitorService = new UserMonitorService(guiWrapper);
             var logger = new ActivityLogger();
 
-            var imageMessageService = new ImageMessageDisplayService(imageLoader, guiWrapper, monitorService, logger);
-            messageDisplayService = new MessageDisplayService(imageMessageService);
+            var services = new List<BaseMessageDisplayService>
+            {
+                new ImageMessageDisplayService(imageLoader, guiWrapper, monitorService, logger),
+                new TextMessageDisplayService(guiWrapper, monitorService, logger)
+            };
+
+            messageDisplayService = new MessageDisplayService(services);
 
             mostrarTimer = new System.Timers.Timer(20_000);
             mostrarTimer.Elapsed += async (s, args) =>
@@ -154,9 +159,6 @@ namespace ImageActivityMonitor.UI
                 var ahora = DateTime.Now;
                 foreach (var item in agenda.Where(a => !a.showed))
                 {
-                    Console.WriteLine($"Evaluando item -> id: {item.messageId}, schedule: {item.schedule:g}, showed: {item.showed}");
-                    Console.WriteLine($"Hora actual: {ahora}");
-
                     if (item.schedule.Year == ahora.Year &&
                         item.schedule.Month == ahora.Month &&
                         item.schedule.Day == ahora.Day &&
@@ -171,36 +173,25 @@ namespace ImageActivityMonitor.UI
                             continue;
                         }
 
+                        Database.MarkAgendaAsShowed(item.messageId, item.schedule);
+                        agenda = Database.GetAgenda();
+
                         dynamic rawMessage = mensajes[item.messageId];
                         string type = rawMessage.type;
 
-                        Console.WriteLine($"Tipo de mensaje: {type}");
-
-                        if (type == "image")
+                        await this.InvokeAsync(async () =>
                         {
-                            var mensaje = new ImageMessage
+                            MessageBase message = service.ParseMessage(type.ToLower(), rawMessage);
+                            if (message != null)
                             {
-                                Type = rawMessage.type,
-                                Link = rawMessage.link,
-                                Duration = (int)rawMessage.duration,
-                                Zone = (int)rawMessage.zone,
-                                Content = (string)rawMessage.content.image,
-                                Width = rawMessage.width != null ? (int)rawMessage.width : 400
-                            };
-
-                            await this.InvokeAsync(async () =>
+                                string estado = await service.MostrarMensajeAsync(message);
+                                Console.WriteLine($"[Mostrado {type}] Zona {message.Zone}, Estado: {estado}");
+                            }
+                            else
                             {
-                                string estado = await service.MostrarMensajeAsync(mensaje);
-                                Console.WriteLine($"[Mostrado] Zona {mensaje.Zone}, Estado: {estado}");
-
-                                Database.MarkAgendaAsShowed(item.messageId, item.schedule);
-                                agenda = Database.GetAgenda();
-                            });
-                        }
-                        else
-                        {
-                            Console.WriteLine($"[Tipo no soportado]: {type}");
-                        }
+                                Console.WriteLine($"[Tipo no soportado]: {type}");
+                            }
+                        });
                     }
                 }
             }

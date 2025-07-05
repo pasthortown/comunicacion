@@ -7,22 +7,19 @@ using ImageActivityMonitor.Infrastructure;
 
 namespace ImageActivityMonitor.App
 {
-    public class ImageMessageDisplayService : BaseMessageDisplayService
+    public class TextMessageDisplayService : BaseMessageDisplayService
     {
-        private readonly ImageLoader _imageLoader;
         private readonly GuiWrapper _guiWrapper;
         private readonly UserMonitorService _monitorService;
         private readonly ActivityLogger _logger;
 
-        public string TypeHandled => "image";
+        public string TypeHandled => "text";
 
-        public ImageMessageDisplayService(
-            ImageLoader imageLoader,
+        public TextMessageDisplayService(
             GuiWrapper guiWrapper,
             UserMonitorService monitorService,
             ActivityLogger logger)
         {
-            _imageLoader = imageLoader;
             _guiWrapper = guiWrapper;
             _monitorService = monitorService;
             _logger = logger;
@@ -30,13 +27,45 @@ namespace ImageActivityMonitor.App
 
         public async Task<string> MostrarMensajeAsync(MessageBase mensajeBase)
         {
-            if (mensajeBase is not ImageMessage mensaje || string.IsNullOrWhiteSpace(mensaje.Content))
-                return "Contenido de imagen no válido";
+            if (mensajeBase is not TextMessage mensaje)
+                return "Tipo de mensaje inválido para este servicio";
 
-            var image = _imageLoader.LoadImageFromBase64(mensaje.Content, mensaje.Width, out int imgWidth, out int imgHeight);
+            const int ancho = 754;
+            const int alto = 132;
+
+            string rutaImagen = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "news.png");
+            Bitmap imagen = new Bitmap(Image.FromFile(rutaImagen), new Size(ancho, alto));
+
+            using (Graphics g = Graphics.FromImage(imagen))
+            {
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+
+                using Brush pincelTexto = new SolidBrush(ColorTranslator.FromHtml("#F5F5F5"));
+
+                // Título (negrita, proporcional a nueva dimensión)
+                using Font fuenteTitulo = new Font("Segoe UI", 24, FontStyle.Bold, GraphicsUnit.Pixel);
+                Rectangle rectTitulo = new Rectangle(120, 24, 514, 36);
+                StringFormat formatoTitulo = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center
+                };
+                g.DrawString(mensaje.Title, fuenteTitulo, pincelTexto, rectTitulo, formatoTitulo);
+
+                // Contenido (regular, proporcional a nueva dimensión)
+                using Font fuenteContenido = new Font("Segoe UI", 16, FontStyle.Regular, GraphicsUnit.Pixel);
+                Rectangle rectContenido = new Rectangle(155, 84, 470, alto - 84);
+                StringFormat formatoContenido = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Near
+                };
+                g.DrawString(mensaje.Content, fuenteContenido, pincelTexto, rectContenido, formatoContenido);
+            }
+
             var screenWidth = Screen.PrimaryScreen.Bounds.Width;
             var screenHeight = Screen.PrimaryScreen.Bounds.Height;
-            var pos = _guiWrapper.CalcularPosicionPorZona(mensaje.Zone, screenWidth, screenHeight, imgWidth, imgHeight);
+            var pos = _guiWrapper.CalcularPosicionPorZona(mensaje.Zone, screenWidth, screenHeight, ancho, alto);
 
             var form = new Form
             {
@@ -46,13 +75,13 @@ namespace ImageActivityMonitor.App
                 TopMost = true,
                 BackColor = Color.White,
                 TransparencyKey = Color.White,
-                Bounds = new Rectangle(pos.X, pos.Y, imgWidth, imgHeight),
+                Bounds = new Rectangle(pos.X, pos.Y, ancho, alto),
                 Opacity = 0.0
             };
 
             var pictureBox = new PictureBox
             {
-                Image = image,
+                Image = imagen,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Dock = DockStyle.Fill,
                 BackColor = Color.White

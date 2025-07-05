@@ -25,10 +25,17 @@ def post_item(endpoint, data):
 # 3. Calcular schedule
 now = datetime.utcnow().replace(microsecond=0)
 schedule = (now + timedelta(hours=sumar_horas, minutes=sumar_minutos)).isoformat()
+schedule2 = (now + timedelta(hours=sumar_horas, minutes=sumar_minutos+1)).isoformat()
 
 # 4. Insertar en messagesgroup
 post_item("messagesgroup", {
-    "schedule": schedule,
+    "schedule": schedule2,
     "group": "Soporte",
     "message_id": 1
+})
+
+post_item("messagesgroup", {
+    "schedule": schedule,
+    "group": "Soporte",
+    "message_id": 2
 })
