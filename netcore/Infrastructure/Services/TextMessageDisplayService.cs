@@ -2,10 +2,11 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ImageActivityMonitor.Models;
+using ImageActivityMonitor.Domain.Entities;
 using ImageActivityMonitor.Infrastructure;
+using ImageActivityMonitor.Application.Services;
 
-namespace ImageActivityMonitor.App
+namespace ImageActivityMonitor.Infrastructure.Services
 {
     public class TextMessageDisplayService : BaseMessageDisplayService
     {

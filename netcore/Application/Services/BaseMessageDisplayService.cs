@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using ImageActivityMonitor.Models;
+using ImageActivityMonitor.Domain.Entities;
 
-namespace ImageActivityMonitor.App
+namespace ImageActivityMonitor.Application.Services
 {
     public interface BaseMessageDisplayService
     {

@@ -1,7 +1,7 @@
-using ImageActivityMonitor.App;
+using ImageActivityMonitor.Application.Services;
 using ImageActivityMonitor.Infrastructure;
-using ImageActivityMonitor.Models;
-using ImageActivityMonitor.Services;
+using ImageActivityMonitor.Domain.Entities;
+using ImageActivityMonitor.Infrastructure.Services;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
@@ -51,7 +51,7 @@ namespace ImageActivityMonitor.UI
             salirMenuItem.Click += (s, e) =>
             {
                 notifyIcon.Visible = false;
-                Application.Exit();
+                System.Windows.Forms.Application.Exit();
             };
             contextMenu.Items.Add(salirMenuItem);
             notifyIcon.ContextMenuStrip = contextMenu;

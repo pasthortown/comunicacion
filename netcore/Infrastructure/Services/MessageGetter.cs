@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ImageActivityMonitor.Infrastructure;
 
-namespace ImageActivityMonitor.Services
+namespace ImageActivityMonitor.Infrastructure.Services
 {
     public class MessageGetter
     {

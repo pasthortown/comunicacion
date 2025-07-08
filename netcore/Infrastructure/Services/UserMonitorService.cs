@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ImageActivityMonitor.Domain;
 using ImageActivityMonitor.Infrastructure;
 
-namespace ImageActivityMonitor.App
+namespace ImageActivityMonitor.Infrastructure.Services
 {
     public class UserMonitorService : IUserActivityChecker
     {

@@ -1,4 +1,4 @@
-namespace ImageActivityMonitor.Models
+namespace ImageActivityMonitor.Domain.Entities
 {
     public class TextMessage: MessageBase
     {

@@ -6,7 +6,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageActivityMonitor.Services
+namespace ImageActivityMonitor.Infrastructure.Services
 {
     public class UserDataGetter
     {
