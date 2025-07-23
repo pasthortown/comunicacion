@@ -9,11 +9,26 @@ import {
   InputGroupTextDirective,
   RowComponent
 } from '@coreui/angular';
+import Swal from 'sweetalert2';
+import { DialogComponent } from './dialog/dialog.component';
+import { UsersListComponent } from './users-list/users-list.component';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
-  imports: [ContainerComponent, RowComponent, ColComponent, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective]
+  imports: [ContainerComponent, RowComponent, ColComponent, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, DialogComponent, UsersListComponent]
 })
-export class UsersComponent {}
+export class UsersComponent {
+  prueba() {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, continuar',
+      cancelButtonText: 'Cancelar'
+    });
+
+  }
+}

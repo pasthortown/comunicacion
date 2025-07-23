@@ -1,1 +1,27 @@
-Mensajes
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-5">
+      <app-base-message (tipoSeleccionado)="actualizarTipo($event)"></app-base-message>
+      @if (tipoMensaje === 'Imagen') {
+        <app-image-message></app-image-message>
+      } @else if (tipoMensaje === 'Texto') {
+        <app-text-message></app-text-message>
+      }
+    </div>
+
+    <div class="col-12 col-md-7 mt-5">
+      <app-zone-screen></app-zone-screen>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
+    <div class="btn-group" role="group" aria-label="Toolbar de acciones">
+      <button type="button" class="btn btn-success">
+        <i class="fas fa-save"></i> Guardar
+      </button>
+      <button type="button" class="btn btn-outline-danger">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</div>
