@@ -12,7 +12,10 @@ collection = db["managers"]
 class BackofficeUserHandler(BaseHandler):
     def get(self, username=None):
         if username:
-            result = collection.find_one({"username": username}, {"_id": False, "password": False})
+            result = collection.find_one(
+                {"username": username},
+                {"_id": False, "password": False}
+            )
             if result:
                 self.write({'response': result, 'status': 200})
             else:
@@ -32,9 +35,11 @@ class BackofficeUserHandler(BaseHandler):
         hashed = bcrypt.hashpw(data["password"].encode(), bcrypt.gensalt(bcrypt_salt))
         data["password"] = hashed.decode()
 
-        collection.insert_one(data)
-        data.pop("password")
-        self.write({'response': data, 'status': 201})
+        result = collection.insert_one(data)
+
+        response_data = {k: v for k, v in data.items() if k != "password"}
+        response_data.pop("_id", None)
+        self.write({'response': response_data, 'status': 201})
 
     def patch(self):
         data = json_decode(self.request.body)
@@ -43,12 +48,19 @@ class BackofficeUserHandler(BaseHandler):
             self.set_status(400)
             return self.write({'response': 'id es requerido para actualizar', 'status': 400})
 
-        update_data = {"username": data.get("username")}
+        update_data = {}
+        if data.get("username"):
+            update_data["username"] = data["username"]
         if data.get("password"):
             hashed = bcrypt.hashpw(data["password"].encode(), bcrypt.gensalt(bcrypt_salt))
             update_data["password"] = hashed.decode()
 
-        collection.update_one({"id": user_id}, {"$set": update_data})
+        result = collection.update_one({"id": user_id}, {"$set": update_data})
+
+        if result.matched_count == 0:
+            self.set_status(404)
+            return self.write({'response': 'Usuario no encontrado', 'status': 404})
+
         update_data.pop("password", None)
         self.write({'response': update_data, 'status': 200})
 

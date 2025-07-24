@@ -65,7 +65,33 @@ services:
     networks:
       Comuncation_NET:
         ipv4_address: 192.168.97.13
-        
+
+  newman:
+    build:
+      context: ./tests
+      dockerfile: newman.dockerfile
+    container_name: newman
+    depends_on:
+      - ws
+    volumes:
+      - ./tests/tasks:/etc/newman
+      - ./tests/results:/output
+    networks:
+      Comuncation_NET:
+        ipv4_address: 192.168.97.14
+    entrypoint:
+      - newman
+      - run
+      - /etc/newman/ws-postman-tests.json
+      - --reporters
+      - cli,json,html
+      - --reporter-json-export
+      - /output/report.json
+      - --reporter-html-export
+      - /output/report.html
+
+
+
 networks:
   Comuncation_NET:
     driver: bridge
