@@ -7,6 +7,7 @@ from handlers.usergroup_handler import UserGroupHandler
 from handlers.user_handler import UserHandler
 from handlers.message_handler import MessageHandler
 from handlers.messagesgroup_handler import MessagesGroupHandler
+from handlers.backoffice_handler import BackofficeUserHandler, BackofficeLoginHandler
 
 def make_app():
     return Application([
@@ -15,7 +16,10 @@ def make_app():
         (r"/search/usersgroup/([^/]+)", UserGroupHandler),
         (r"/search/users/([^/]+)", UserHandler),
         (r"/search/messagereport/([^/]+)", MessageHandler),
-        (r"/search/messagesgroup/([^/]+)", MessagesGroupHandler)
+        (r"/search/messagesgroup/([^/]+)", MessagesGroupHandler),
+        (r"/backoffice/user", BackofficeUserHandler),
+        (r"/backoffice/user/([^/]+)", BackofficeUserHandler),
+        (r"/backoffice/login", BackofficeLoginHandler),
     ], debug=True)
 
 if __name__ == "__main__":
