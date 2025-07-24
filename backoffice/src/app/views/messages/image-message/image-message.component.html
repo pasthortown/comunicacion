@@ -1,7 +1,7 @@
 <!-- Ancho -->
 <div class="mb-3">
   <label for="anchoInput" class="form-label">Ancho</label>
-  <input type="number" class="form-control" id="anchoInput" step="1">
+  <input type="number" class="form-control" id="anchoInput" step="1" [(ngModel)]="model.ancho" (input)="emitirAncho($event)">
   <small class="form-text text-muted">Establece el ancho en píxeles que ocupará el mensaje.</small>
 </div>
 

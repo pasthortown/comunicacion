@@ -1,14 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Message } from '../../../models/message.model';
 
 @Component({
   selector: 'app-image-message',
-  imports: [],
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './image-message.component.html',
   styleUrl: './image-message.component.scss'
 })
-export class ImageMessageComponent {
+export class ImageMessageComponent implements OnChanges {
+  @Input() model!: Message;
+  @Output() modelChange = new EventEmitter<Message>();
 
   imagenCargada: string | null = null;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['model'] && this.model?.content && typeof this.model.content === 'string') {
+      this.imagenCargada = this.model.content;
+    }
+  }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -41,8 +52,15 @@ export class ImageMessageComponent {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.imagenCargada = reader.result as string;
+      const base64 = reader.result as string;
+      this.imagenCargada = base64;
+      this.model.content = base64;
+      this.modelChange.emit(this.model);
     };
     reader.readAsDataURL(file);
+  }
+
+  emitirAncho(event: Event) {
+    this.modelChange.emit(this.model);
   }
 }
