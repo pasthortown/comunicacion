@@ -26,4 +26,20 @@ export class BaseMessageComponent {
   onLinkChange(_link: string) {
     this.modelChange.emit(this.model);
   }
+
+  esLinkValido(link: string): boolean {
+    try {
+      const url = new URL(link);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+
+  abrirLink() {
+    if (this.esLinkValido(this.model.link)) {
+      window.open(this.model.link, '_blank');
+    }
+  }
+
 }
