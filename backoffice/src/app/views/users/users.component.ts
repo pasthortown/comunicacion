@@ -1,3 +1,4 @@
+import { UserDialogComponent } from './user-dialog/user-dialog.component';
 import { Component } from '@angular/core';
 import { IconDirective } from '@coreui/icons-angular';
 import {
@@ -10,14 +11,13 @@ import {
   RowComponent
 } from '@coreui/angular';
 import Swal from 'sweetalert2';
-import { DialogComponent } from './dialog/dialog.component';
 import { UsersListComponent } from './users-list/users-list.component';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
-  imports: [ContainerComponent, RowComponent, ColComponent, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, DialogComponent, UsersListComponent]
+  imports: [ContainerComponent, RowComponent, ColComponent, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, UserDialogComponent, UsersListComponent]
 })
 export class UsersComponent {
   prueba() {

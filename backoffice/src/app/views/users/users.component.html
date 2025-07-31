@@ -1,3 +1,21 @@
-<app-users-list></app-users-list>
-<app-dialog></app-dialog>
-<button (click)="prueba()">prueba de swal</button>
+<div class="container">
+  <!-- Título -->
+  <div class="row">
+    <h1 class="col-12 mb-4">
+      Administración de Usuarios
+    </h1>
+  </div>
+
+  <!-- Paneles: Nuevo Usuario y Lista de Usuarios -->
+  <div class="row">
+    <!-- Panel Izquierdo: Nuevo Usuario -->
+    <div class="col-12 col-md-6 mb-4 mb-md-0">
+      <app-user-dialog></app-user-dialog>
+    </div>
+
+    <!-- Panel Derecho: Lista de Usuarios -->
+    <div class="col-12 col-md-6">
+      <app-users-list></app-users-list>
+    </div>
+  </div>
+</div>
