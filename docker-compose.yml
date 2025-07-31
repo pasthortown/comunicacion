@@ -90,7 +90,18 @@ services:
       - --reporter-html-export
       - /output/report.html
 
-
+  jmeter:
+    image: justb4/jmeter:5.5
+    volumes:
+      - ./jmeter:/tests
+    working_dir: /tests
+    command: >
+      -n -t test_plan.jmx -l results/results.jtl -j results/jmeter.log
+    networks:
+      Comuncation_NET:
+        ipv4_address: 192.168.97.16
+    depends_on:
+      - ws
 
 networks:
   Comuncation_NET:
