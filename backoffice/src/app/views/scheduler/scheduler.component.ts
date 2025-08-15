@@ -1,3 +1,4 @@
+import { ScheduleComponent } from './../../../components/schedule/schedule.component';
 import { Component } from '@angular/core';
 import { IconDirective } from '@coreui/icons-angular';
 import {
@@ -14,6 +15,6 @@ import {
   selector: 'app-scheduler',
   templateUrl: './scheduler.component.html',
   styleUrls: ['./scheduler.component.scss'],
-  imports: [ContainerComponent, RowComponent, ColComponent, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective]
+  imports: [ScheduleComponent, ContainerComponent, RowComponent, ColComponent, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective]
 })
 export class SchedulerComponent {}
