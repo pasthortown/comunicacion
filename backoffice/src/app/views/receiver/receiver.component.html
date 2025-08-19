@@ -1,6 +1,31 @@
-Receptores de mensajes
+<div class="container">
+  <!-- Título -->
+  <div class="row">
+    <h1 class="col-12 mb-4">
+      Administración de Grupos
+    </h1>
+    <small class="col-12 mb-4">Permite la gestión de los grupos que recibiran los mensajes que se remitan con la plataforma de Comunicación de Grupo KFC</small>
+  </div>
 
-- Leer aquellos usaurios que aun no tienen grupo asignado
+  <div class="row">
+    <div class="col-4">
+      <app-list [title]="'Usuarios'"></app-list>
+    </div>
+    <div class="col-4">
+      <app-list [title]="'Grupos'"></app-list>
+    </div>
+    <div class="col-4">
+      <app-list [title]="'Miembros del Grupo'"></app-list>
+    </div>
+  </div>
+</div>
 
-- Permitir ver usuarios en que grupo estan
-- Crear nuevos grupos (eliminar agregar y buscar usuarios) hay 4000 usuarios
+
+DEBE PERMITIR FILTRAR TODOS LOS USUARIOS, MOSTRAR AQUELLOS QUE AUN NO ESTAN ASIGNADOS DE UN COLOR DIFERENTE O CON UNA MARCA ESPECIAL.
+DEBE PERMITIR AL SELECCIONAR UN USUARIO FILTRAR EL GRUPOS DE SOLO AQUELLOS QUE PERTENECE EL USUARIO
+AL SELECCIONAR UN GRUPO SE DEBE MOSTRAR LA LISTA DE MIEMBROS DEL GRUPO EN EL TERCER DIV
+SE DEBE MARCAR EL USUARIO SELECCIONADO
+EL TERCER DIV DEBE PERMITIR SOLO ELIMINAR USUARIOS
+EL SEGUNDO DIV DEBE PERMITIR ELIMINAR GRUPOS QUE ESTEN VACIOS
+
+SE DEBE SELECCIONAR UN USUARIO DEL PRIMER DIV, Y SE HABILITA EL BOTON DE AGREGAR EN EL SEGUNDO DIV PARA AGREGAR EL USUARIO (ALRTERNATIVA CON EL DRAG AND DROP)

@@ -1,4 +1,4 @@
-<h3 class="mb-4">Agendar Mensaje</h3>
+<h3 class="mb-4">Programar Envío de Mensaje</h3>
 
 <!-- Seleccionar Mensaje -->
 <div class="mb-3">
@@ -50,13 +50,22 @@
 
 <!-- Fecha y Hora de Envío -->
 <div class="mb-4">
-  <label for="fechaHoraInput" class="form-label">Fecha y Hora de Envío</label>
-  <input
-    type="datetime-local"
-    class="form-control"
-    id="fechaHoraInput"
-    aria-describedby="fechaHoraHelp"
-  />
+  <div class="row">
+    <label for="fechaHoraInput" class="form-label">Fecha y Hora de Envío</label>
+  </div>
+
+  <div class="d-flex align-items-center gap-3">
+    <!-- Fecha -->
+    <ngb-datepicker [outsideDays]="'hidden'"></ngb-datepicker>
+
+    <!-- Hora -->
+    <ngb-timepicker
+      [spinners]="true"
+      [meridian]="false">
+    </ngb-timepicker>
+  </div>
+
+
   <small id="fechaHoraHelp" class="form-text text-muted">
     Defina cuándo debe enviarse el mensaje.
   </small>

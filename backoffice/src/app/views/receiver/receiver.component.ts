@@ -1,3 +1,4 @@
+import { ListComponent } from './list/list.component';
 import { Component } from '@angular/core';
 import { IconDirective } from '@coreui/icons-angular';
 import {
@@ -14,6 +15,6 @@ import {
   selector: 'app-receiver',
   templateUrl: './receiver.component.html',
   styleUrls: ['./receiver.component.scss'],
-  imports: [ContainerComponent, RowComponent, ColComponent, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective]
+  imports: [ListComponent, ContainerComponent, RowComponent, ColComponent, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective]
 })
 export class ReceiverComponent {}
