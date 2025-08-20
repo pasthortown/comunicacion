@@ -3,13 +3,24 @@
 
   <!-- Toolbar -->
   <div class="d-flex align-items-center gap-2 mb-3 toolbar">
-    <button
-      type="button"
-      class="btn btn-success d-flex align-items-center"
-      aria-label="Agregar usuarios seleccionados a un grupo"
-      title="Agregar usuarios seleccionados a un grupo">
-      <i class="fa-solid fa-list-ul me-1"></i>
-    </button>
+    @if(can_delete) {
+      <button
+        type="button"
+        class="btn btn-danger d-flex align-items-center"
+        aria-label="Eliminar usuarios seleccionados del grupo"
+        title="Eliminar usuarios seleccionados del grupo">
+        <i class="fa-solid fa-trash me-1"></i>
+      </button>
+    } @else {
+      <button
+        type="button"
+        class="btn btn-success d-flex align-items-center"
+        aria-label="Agregar usuarios seleccionados a un grupo"
+        title="Agregar usuarios seleccionados a un grupo">
+        <i class="fa-solid fa-list-ul me-1"></i>
+      </button>
+    }
+
 
     <!-- Buscador -->
     <div class="input-group ms-2 toolbar-search">
@@ -36,16 +47,18 @@
             </td>
 
             <!-- ojo -->
-            <td class="icon-cell">
-              <a
-                role="button"
-                class="eye-link text-decoration-none"
-                title="Ver Detalles"
-                aria-label="Ver Detalles"
-                (click)="inspectUser(user)">
-                <i class="fa-regular fa-eye"></i>
-              </a>
-            </td>
+            @if(show_details) {
+              <td class="icon-cell">
+                <a
+                  role="button"
+                  class="eye-link text-decoration-none"
+                  title="Ver Detalles"
+                  aria-label="Ver Detalles"
+                  (click)="inspectUser(user)">
+                  <i class="fa-regular fa-eye"></i>
+                </a>
+              </td>
+            }
 
             <!-- email -->
             <td class="custom-cell">

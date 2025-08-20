@@ -16,7 +16,8 @@ interface User {
 })
 export class UsersComponent implements OnInit {
 
-  @Input() title: String = '';
+  @Input() show_details: boolean = true;
+  @Input() can_delete: boolean = false;
 
   users: User[] = [
     { id: 1, email: 'usuario1ejemplo.com', sin_grupo: true,  select: false },

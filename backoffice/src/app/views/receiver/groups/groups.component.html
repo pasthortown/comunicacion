@@ -36,23 +36,25 @@
             </td>
 
             <!-- ojo -->
-            <td class="icon-cell">
-              <a
-                role="button"
-                class="eye-link text-decoration-none"
-                title="Ver Detalles"
-                aria-label="Ver Detalles"
-                (click)="inspectGroup(group)">
-                <i class="fa-regular fa-eye"></i>
-              </a>
-            </td>
+            @if(show_details) {
+              <td class="icon-cell">
+                <a
+                  role="button"
+                  class="eye-link text-decoration-none"
+                  title="Ver Detalles"
+                  aria-label="Ver Detalles"
+                  (click)="inspectGroup(group)">
+                  <i class="fa-regular fa-eye"></i>
+                </a>
+              </td>
+            }
 
-            <!-- email -->
+            <!-- name -->
             <td class="custom-cell">
               @if (group.sin_grupo) {
-                <span class="group-email group--sin-grupo">{{ group.email }}</span>
+                <span class="group-name group--sin-grupo">{{ group.name }}</span>
               } @else {
-                <span class="group-email">{{ group.email }}</span>
+                <span class="group-name">{{ group.name }}</span>
               }
             </td>
           </tr>

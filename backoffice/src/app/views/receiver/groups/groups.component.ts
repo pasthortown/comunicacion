@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 interface Group {
   id: number;
-  email: string;
+  name: string;
   sin_grupo: boolean;
   select: boolean;
 }
@@ -16,14 +16,14 @@ interface Group {
 })
 export class GroupsComponent implements OnInit {
 
-  @Input() title: String = '';
+  @Input() show_details: boolean = true;
 
   groups: Group[] = [
-    { id: 1, email: 'usuario1ejemplo.com', sin_grupo: true,  select: false },
-    { id: 2, email: 'usuario2ejemplo.com', sin_grupo: false, select: true  },
-    { id: 3, email: 'usuario3ejemplo.com', sin_grupo: false, select: false },
-    { id: 4, email: 'usuario4ejemplo.com', sin_grupo: true,  select: false },
-    { id: 5, email: 'usuario5ejemplo.com', sin_grupo: false, select: true  }
+    { id: 1, name: 'usuario1ejemplo.com', sin_grupo: true,  select: false },
+    { id: 2, name: 'usuario2ejemplo.com', sin_grupo: false, select: true  },
+    { id: 3, name: 'usuario3ejemplo.com', sin_grupo: false, select: false },
+    { id: 4, name: 'usuario4ejemplo.com', sin_grupo: true,  select: false },
+    { id: 5, name: 'usuario5ejemplo.com', sin_grupo: false, select: true  }
   ];
 
   ngOnInit(): void {
@@ -49,7 +49,7 @@ export class GroupsComponent implements OnInit {
       if (pa !== pb) return pa - pb;
 
       // alfabético ascendente
-      return a.email.localeCompare(b.email, undefined, { sensitivity: 'base' });
+      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
     });
   }
 

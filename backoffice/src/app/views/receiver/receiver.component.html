@@ -9,10 +9,33 @@
 
   <div class="row mb-5">
     <div class="col-6">
-      <app-users></app-users>
+      <app-users [show_details]="true"></app-users>
     </div>
     <div class="col-6">
-      <app-groups></app-groups>
+      <app-groups [show_details]="true"></app-groups>
     </div>
   </div>
 </div>
+
+<c-modal #modalXl id="modal" size="lg" [visible]="visibleUserDetails" (visibleChange)="handleChangeVisibleUserDetails($event)">
+  <c-modal-header>
+    <h3>Datos del Usuario</h3>
+    <button cButtonClose (click)="cancelarUserDetails()"></button>
+  </c-modal-header>
+  <c-modal-body>
+    <app-user-details></app-user-details>
+  </c-modal-body>
+</c-modal>
+
+
+<c-modal #modalXl id="modal" size="lg" [visible]="visibleGroupDetails" (visibleChange)="handleChangeVisibleGroupDetails($event)">
+  <c-modal-header>
+    <h3>Datos del Grupo</h3>
+    <button cButtonClose (click)="cancelarGroupDetails()"></button>
+  </c-modal-header>
+  <c-modal-body>
+    <app-group-details></app-group-details>
+  </c-modal-body>
+</c-modal>
+
+
