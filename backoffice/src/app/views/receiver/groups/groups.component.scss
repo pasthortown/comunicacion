@@ -1,0 +1,46 @@
+/* botón con plus pequeño superpuesto */
+.small-plus {
+  position: relative;
+  top: -0.25rem;
+  margin-left: -0.2rem;
+  font-size: 0.75em;
+}
+
+/* que el input de búsqueda no crezca de más; ajusta a gusto */
+.toolbar .toolbar-search {
+  min-width: 220px;
+  flex: 1;            /* que use el espacio libre */
+}
+
+/* solo la tabla scrollea, altura máxima 60vh */
+.table-wrapper {
+  max-height: 50vh;
+  overflow: auto;
+}
+
+.icon-cell, .check-cell {
+  width: 42px;
+  text-align: center;
+}
+
+.eye-link,
+.eye-link:visited,
+.eye-link:active {
+  color: var(--bs-dark) !important; /* permanece dark incluso al hacer click */
+}
+
+.eye-link:hover {
+  color: var(--bs-primary) !important; /* en hover -> primary */
+}
+
+/* (resto de estilos que ya tenías) */
+.panel-usuarios { min-height: 420px; }
+.table.custom-table :where(td, th) { border: 0; }
+.custom-row { border-bottom: 1px solid #f1f3f5; transition: background-color 0.2s ease; }
+.custom-row:last-child { border-bottom: 0; }
+.check-cell { width: 42px; text-align: center; }
+.group-email { color: #000; font-weight: 400; }
+.group--sin-grupo { font-weight: 700; }
+.selected-row { background-color: #e9f5ff; font-weight: 500; }
+.selected-row .group-email { color: #58925f; }
+.custom-row:hover { background-color: #f6f7f9; }
