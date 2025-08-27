@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="row">
+    <h1 class="col-12 mb-4">
+      Administración de Mensajes
+    </h1>
+    <small class="col-12 mb-4">Permite la administración de los mensajes que se envían en la plataforma de Comunicación de Grupo KFC</small>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-4">
+      <app-base-message [(model)]="message" (tipoCambiado)="onTipoCambiado($event)"></app-base-message>
+    </div>
+
+    <div class="col-12 col-md-4">
+      @switch (message.tipo) {
+        @case ('Imagen') {
+          <app-image-message [(model)]="message"></app-image-message>
+        }
+        @case ('Texto') {
+          <app-text-message [(model)]="message"></app-text-message>
+        }
+      }
+    </div>
+
+    <div class="col-12 col-md-4">
+      <app-zone-screen [(model)]="message"></app-zone-screen>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
+    <div class="btn-group" role="group" aria-label="Toolbar de acciones">
+      <button type="button" class="btn btn-dark" (click)="prueba()">
+        <i class="fas fa-save"></i> Guardar
+      </button>
+      <button type="button" class="btn btn-outline-danger">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</div>

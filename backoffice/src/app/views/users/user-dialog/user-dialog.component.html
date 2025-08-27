@@ -1,0 +1,58 @@
+<div class="p-4 border rounded shadow-sm bg-white panel-usuarios">
+  <h3 class="mb-4">Nuevo Usuario</h3>
+
+  <!-- Correo Electrónico -->
+  <div class="mb-3">
+    <label for="emailInput" class="form-label">Correo Electrónico</label>
+    <input
+      type="email"
+      class="form-control"
+      id="emailInput"
+      placeholder="usuario@ejemplo.com"
+    />
+    <small class="form-text text-muted">
+      Ingrese la dirección de correo electrónico del usuario.
+    </small>
+  </div>
+
+  <!-- Contraseña -->
+  <div class="mb-3">
+    <label for="passwordInput" class="form-label">Contraseña</label>
+    <input
+      type="password"
+      class="form-control"
+      id="passwordInput"
+      placeholder="Ingrese una contraseña segura"
+    />
+    <small class="form-text text-muted">
+      La contraseña debe tener al menos 8 caracteres y contener letras y números.
+    </small>
+  </div>
+
+  <!-- Confirmar Contraseña -->
+  <div class="mb-4">
+    <label for="confirmPasswordInput" class="form-label">Confirmar Contraseña</label>
+    <input
+      type="password"
+      class="form-control"
+      id="confirmPasswordInput"
+      placeholder="Repita la contraseña"
+    />
+    <small class="form-text text-muted">
+      Asegúrese de que esta contraseña coincida con la anterior.
+    </small>
+  </div>
+
+  <!-- Botones -->
+  <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
+    <div class="btn-group" role="group" aria-label="Toolbar de acciones">
+      <button type="button" class="btn btn-dark">
+        <i class="fas fa-save"></i> Guardar
+      </button>
+      <button type="button" class="btn btn-outline-danger">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+`

@@ -1,0 +1,53 @@
+<!-- Mensaje -->
+<div class="mb-3">
+  <label for="mensajeSelect" class="form-label">Mensajes</label>
+  <select class="form-select" id="mensajeSelect">
+    <option selected>Nuevo</option>
+    <option>Existente</option>
+  </select>
+  <small class="form-text text-muted">Seleccione un mensaje existente o cree uno nuevo.</small>
+</div>
+
+<!-- Tipo -->
+<div class="mb-3">
+  <label for="tipoSelect" class="form-label">Tipo</label>
+  <select class="form-select" id="tipoSelect" [(ngModel)]="model.tipo" (ngModelChange)="onTipoChange($event)">
+    <option>Imagen</option>
+    <option>Texto</option>
+  </select>
+  <small class="form-text text-muted">Permite escoger el tipo de mensaje.</small>
+</div>
+
+<!-- Duración -->
+<div class="mb-3">
+  <label for="duracionInput" class="form-label">Duración</label>
+  <input type="number" class="form-control" id="duracionInput" step="1" min="10"
+         [(ngModel)]="model.duracion" (ngModelChange)="onDuracionChange($event)">
+  <small class="form-text text-muted">Establece el tiempo en segundos que el mensaje estará visible en pantalla.</small>
+</div>
+
+<!-- Link -->
+<div class="mb-3">
+  <label for="linkInput" class="form-label">Link</label>
+  <div class="input-group">
+    <input
+      type="url"
+      class="form-control"
+      id="linkInput"
+      placeholder="https://ejemplo.com"
+      [(ngModel)]="model.link"
+      (ngModelChange)="onLinkChange($event)"
+    >
+    <button
+      class="btn btn-outline-primary"
+      type="button"
+      [disabled]="!esLinkValido(model.link)"
+      (click)="abrirLink()">
+      <i class="fas fa-external-link-alt"></i>
+    </button>
+  </div>
+  <small class="form-text text-muted">
+    Establece la URL que se abrirá al dar clic en el mensaje.
+  </small>
+</div>
+

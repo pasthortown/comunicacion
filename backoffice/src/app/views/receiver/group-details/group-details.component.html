@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-12">
+    <div class="p-4 border rounded shadow-sm bg-white">
+
+      <div class="mb-3">
+        <label for="nameInput" class="form-label">Nombre</label>
+        <input class="form-control" id="nombreGrupo" aria-describedby="nombreGrupo" placeholder="Nombre del Grupo"/>
+        <small id="mensajeHelp" class="form-text text-muted">
+          Nombre del Grupo.
+        </small>
+      </div>
+
+      <div class="mb-3">
+        <label for="groupMembers" class="form-label">Miembros del Grupo</label>
+        <app-users [show_details]="false" [can_delete]="true"></app-users>
+        <small id="mensajeHelp" class="form-text text-muted">
+          Usuarios que pertenecen al Grupo.
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
